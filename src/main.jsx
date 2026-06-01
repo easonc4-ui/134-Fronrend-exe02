@@ -5,7 +5,6 @@ import {
   Apple,
   ArrowLeft,
   ArrowRight,
-  Bell,
   Check,
   ChevronDown,
   Clock3,
@@ -17,6 +16,7 @@ import {
   MapPin,
   Package,
   Plus,
+  QrCode,
   Search,
   Share2,
   ShieldCheck,
@@ -172,7 +172,7 @@ function FoodCard({ item, onOpen }) {
   );
 }
 
-function HomeScreen({ activeFilter, setActiveFilter, query, setQuery, onOpen, onNav, orders }) {
+function HomeScreen({ activeFilter, setActiveFilter, query, setQuery, onOpen, onNav, onSearch, onQr, orders }) {
   const filteredItems = useMemo(() => {
     const q = query.trim().toLowerCase();
     return items.filter((item) => {
@@ -199,6 +199,7 @@ function HomeScreen({ activeFilter, setActiveFilter, query, setQuery, onOpen, on
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
+          onFocus={onSearch}
           placeholder="Search bakeries, cafes, groceries..."
         />
         <SlidersHorizontal size={17} />
@@ -224,10 +225,7 @@ function HomeScreen({ activeFilter, setActiveFilter, query, setQuery, onOpen, on
         ))}
         {filteredItems.length === 0 && <p className="empty-state">No bags match this search.</p>}
       </div>
-      <button className="scan-button" onClick={() => setActiveFilter('< $5')}>
-        80% off
-      </button>
-      <BottomNav active="home" onNav={onNav} orders={orders} />
+      <BottomNav active="home" onNav={onNav} onQr={onQr} orders={orders} />
     </div>
   );
 }
@@ -283,19 +281,31 @@ function DetailScreen({ item, liked, setLiked, onBack, onPreview }) {
           </div>
         </div>
         <h3>What to Expect</h3>
+        <p className="expect-subtitle">Based on recent bags from this store</p>
         <div className="expect-grid">
           <InfoCard icon={ShoppingBag} title="Typical Items" text={item.details} />
           <InfoCard icon={Utensils} title="Portion Size" text={item.portion} />
           <InfoCard icon={AlertTriangle} title="Allergens" text={item.allergens} />
           <InfoCard icon={Lock} title="Packaging" text="Paper bags provided. Bring your own tote." />
         </div>
-      </section>
-      <div className="sticky-action">
-        <button onClick={onPreview}>
-          View pickup & reserve
+        <h3>Location</h3>
+        <div className="detail-map">
+          <div className="map-road one" />
+          <div className="map-road two" />
+          <div className="pin">
+            <MapPin size={20} fill="currentColor" />
+          </div>
+        </div>
+        <strong className="detail-address">{item.address}</strong>
+        <p className="detail-location-note">{item.locationHint}</p>
+        <button className="detail-pickup-link" onClick={onPreview}>
+          <span>
+            <User size={18} />
+          </span>
+          Pickup Instructions
           <ArrowRight size={18} />
         </button>
-      </div>
+      </section>
     </div>
   );
 }
@@ -422,38 +432,159 @@ function CheckoutScreen({ item, payment, setPayment, promo, setPromo, discount, 
   );
 }
 
-function OrdersScreen({ orders, onNav, onOpenOrder }) {
+function SearchResultsScreen({ query, setQuery, onBack, onOpen, onNav, onQr, orders }) {
+  const resultItems = [items[0], items[1], items[2]];
+
+  return (
+    <div className="screen search-results-screen">
+      <div className="search-topbar">
+        <button aria-label="Back" onClick={onBack}>
+          <ArrowLeft size={21} />
+        </button>
+        <label className="search-input-large">
+          <Search size={16} />
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="surplus" autoFocus />
+          <button type="button" onClick={() => setQuery('')}>
+            ×
+          </button>
+        </label>
+      </div>
+      <div className="search-meta">
+        <span>12 results found</span>
+        <button>
+          <SlidersHorizontal size={18} />
+          Filters (2)
+        </button>
+      </div>
+      <div className="search-tags">
+        <span>Vegetarian ×</span>
+        <span>High Predictability ×</span>
+      </div>
+      <div className="result-list">
+        {resultItems.map((item, index) => (
+          <button className={`result-card ${index === 2 ? 'sold-out' : ''}`} key={item.id} onClick={() => onOpen(item)}>
+            <div className="result-image" style={{ backgroundImage: `url(${item.image})` }}>
+              <span>{index === 2 ? 'Sold Out' : `${item.left} left`}</span>
+            </div>
+            <div className="result-copy">
+              <p>{index === 1 ? 'MED PREDICTABILITY' : 'HIGH PREDICTABILITY'}</p>
+              <h2>{index === 2 ? 'Sushi Express' : item.title}</h2>
+              <small>{item.distance.replace(' away', '')} · {item.category.split(' ')[0]}</small>
+              <strong>
+                {money(item.price)}
+                <s>{money(item.oldPrice)}</s>
+              </strong>
+              <em>
+                <Clock3 size={13} />
+                {item.pickup}
+              </em>
+            </div>
+            <span className="result-rating">
+              <Star size={12} fill="currentColor" />
+              {index === 2 ? '4.9' : item.rating}
+            </span>
+          </button>
+        ))}
+      </div>
+      <div className="recent-searches">
+        <h2>Recent Searches</h2>
+        {['pastries', 'vegan lunch', 'pizza'].map((term) => (
+          <button key={term} onClick={() => setQuery(term)}>
+            <Search size={14} />
+            {term}
+          </button>
+        ))}
+      </div>
+      <BottomNav active="home" onNav={onNav} onQr={onQr} orders={orders} />
+    </div>
+  );
+}
+
+const isQrCellFilled = (index) => {
+  const size = 13;
+  const row = Math.floor(index / size);
+  const col = index % size;
+  const inFinder = (r, c) =>
+    (row >= r && row <= r + 3 && col >= c && col <= c + 3 && (row === r || row === r + 3 || col === c || col === c + 3)) ||
+    (row >= r + 1 && row <= r + 2 && col >= c + 1 && col <= c + 2);
+
+  if (inFinder(0, 0) || inFinder(0, 9) || inFinder(9, 0)) return true;
+  return [18, 20, 24, 32, 34, 36, 42, 45, 47, 55, 58, 60, 62, 68, 70, 74, 76, 80, 86, 88, 91, 96, 99, 102, 106, 112, 115, 119, 124, 128, 132, 137, 141, 145, 151, 154, 158, 163, 166].includes(index);
+};
+
+function OrdersScreen({ orders, onNav, onOpenOrder, onBack, onQr }) {
+  const activeOrder =
+    orders[0] ||
+    {
+      code: 'CB-2048',
+      item: items[0],
+      payment: 'apple',
+      total: 4.85
+    };
+
   return (
     <div className="screen orders-screen">
-      <MiniStatus />
-      <header className="plain-header">
-        <h1>Orders</h1>
-        <Bell size={20} />
+      <header className="pickup-header">
+        <button aria-label="Back" onClick={onBack}>
+          <ArrowLeft size={21} />
+        </button>
+        <div>
+          <h1>Pickup</h1>
+          <p>Your active orders</p>
+        </div>
+        <Info size={20} />
       </header>
-      {orders.length === 0 ? (
-        <div className="orders-empty">
-          <ShoppingBag size={38} />
-          <h2>No orders yet</h2>
-          <p>Reserve a nearby surplus bag and it will appear here.</p>
-          <button onClick={() => onNav('home')}>Browse bags</button>
-        </div>
-      ) : (
-        <div className="orders-list">
-          {orders.map((order) => (
-            <button className="order-card" key={order.code} onClick={() => onOpenOrder(order)}>
-              <span>
-                <Check size={18} />
-              </span>
+      <div className="pickup-orders-content">
+          <section className="active-pickup-card">
+            <div className="pickup-merchant">
+              <img src={activeOrder.item.image} alt="" />
               <div>
-                <strong>{order.item.title}</strong>
-                <p>Code {order.code} · Pickup {order.item.pickup}</p>
+                <h2>{activeOrder.item.title}</h2>
+                <p>{activeOrder.item.subtitle}</p>
+                <span>Ready for Pickup</span>
               </div>
-              <b>{money(order.total)}</b>
+            </div>
+            <div className="pickup-window">
+              <strong>
+                <Clock3 size={17} />
+                Today, {activeOrder.item.pickup}
+              </strong>
+              <div>
+                <span>Ends in 2h 15m</span>
+                <span>Only {activeOrder.item.left} bags left</span>
+              </div>
+            </div>
+            <p className="pickup-address">
+              <MapPin size={17} />
+              {activeOrder.item.address}
+            </p>
+            <p className="qr-help">Show this QR code to staff</p>
+            <div className="fake-qr" aria-label={`Pickup QR code ${activeOrder.code}`}>
+              {Array.from({ length: 169 }).map((_, index) => (
+                <span key={index} className={isQrCellFilled(index) ? 'filled' : ''} />
+              ))}
+            </div>
+            <h3>Order #{activeOrder.code}</h3>
+            <p className="pickup-store">{activeOrder.item.title}</p>
+            <button className="open-instructions" onClick={() => onOpenOrder(activeOrder)}>
+              Open Pickup Instructions
             </button>
-          ))}
+          </section>
+          <h2 className="other-orders-title">Other Orders</h2>
+          <section className="other-order-card">
+            <img src={items[1].image} alt="" />
+            <div>
+              <h3>Green Leaf Cafe</h3>
+              <p>
+                <Clock3 size={14} />
+                Today, 2:30 PM - 3:00 PM
+              </p>
+              <small>0.5 mi away · Cafe & Deli</small>
+            </div>
+            <button>View Code</button>
+          </section>
         </div>
-      )}
-      <BottomNav active="orders" onNav={onNav} orders={orders} />
+      <BottomNav active="orders" onNav={onNav} onQr={onQr} orders={orders} />
     </div>
   );
 }
@@ -518,7 +649,7 @@ function LineItem({ label, value, strong }) {
   );
 }
 
-function BottomNav({ active, onNav, orders }) {
+function BottomNav({ active, onNav, onQr, orders }) {
   const nav = [
     { id: 'home', icon: Home, label: 'Home' },
     { id: 'orders', icon: ShoppingBag, label: 'Orders' },
@@ -528,11 +659,20 @@ function BottomNav({ active, onNav, orders }) {
 
   return (
     <nav className="bottom-nav">
-      {nav.map(({ id, icon: Icon, label }) => (
+      {nav.slice(0, 2).map(({ id, icon: Icon, label }) => (
         <button className={active === id ? 'active' : ''} key={id} onClick={() => onNav(id)}>
           <Icon size={17} />
           <span>{label}</span>
           {id === 'orders' && orders.length > 0 && <b>{orders.length}</b>}
+        </button>
+      ))}
+      <button className="qr-shortcut" aria-label="Pickup QR shortcut" onClick={onQr}>
+        <QrCode size={24} />
+      </button>
+      {nav.slice(2).map(({ id, icon: Icon, label }) => (
+        <button className={active === id ? 'active' : ''} key={id} onClick={() => onNav(id)}>
+          <Icon size={17} />
+          <span>{label}</span>
         </button>
       ))}
     </nav>
@@ -558,6 +698,7 @@ function App() {
     if (target === 'orders') goOrders();
     else goHome();
   };
+  const goQr = () => setPage('orders');
 
   const openItem = (item) => {
     setSelectedItem(item);
@@ -576,7 +717,7 @@ function App() {
     };
     setOrders((current) => [order, ...current]);
     setLatestOrder(order);
-    setPage('success');
+    setPage('orders');
   };
 
   const screen =
@@ -612,10 +753,24 @@ function App() {
       <OrdersScreen
         orders={orders}
         onNav={handleNav}
+        onBack={goHome}
+        onQr={goQr}
         onOpenOrder={(order) => {
           setLatestOrder(order);
-          setPage('success');
+          setSelectedItem(order.item);
+          setShowPickup(true);
+          setPage('preview');
         }}
+      />
+    ) : page === 'search' ? (
+      <SearchResultsScreen
+        query={query}
+        setQuery={setQuery}
+        onBack={goHome}
+        onOpen={openItem}
+        onNav={handleNav}
+        onQr={goQr}
+        orders={orders}
       />
     ) : page === 'success' && latestOrder ? (
       <SuccessScreen order={latestOrder} onNav={handleNav} />
@@ -627,6 +782,11 @@ function App() {
         setQuery={setQuery}
         onOpen={openItem}
         onNav={handleNav}
+        onSearch={() => {
+          if (!query) setQuery('surplus');
+          setPage('search');
+        }}
+        onQr={goQr}
         orders={orders}
       />
     );

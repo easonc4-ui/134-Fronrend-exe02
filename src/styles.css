@@ -197,7 +197,14 @@ button {
 .promo-row,
 .line-item,
 .order-card,
-.plain-header {
+.plain-header,
+.search-topbar,
+.search-meta,
+.result-card,
+.pickup-header,
+.pickup-merchant,
+.pickup-window strong,
+.pickup-address {
   display: flex;
   align-items: center;
 }
@@ -336,33 +343,19 @@ button {
   font-size: 14px;
 }
 
-.scan-button {
-  position: absolute;
-  left: 50%;
-  bottom: 62px;
-  z-index: 3;
-  width: 56px;
-  height: 56px;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  color: #fff;
-  background: #bd3e36;
-  box-shadow: 0 10px 24px rgba(189, 62, 54, 0.3);
-  font-size: 12px;
-  font-weight: 900;
-}
-
 .bottom-nav {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 60px;
+  left: 20px;
+  right: 20px;
+  bottom: 20px;
+  z-index: 10;
+  height: 64px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: center;
-  border-radius: 22px 22px 0 0;
+  border-radius: 24px;
   background: #121212;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.26);
 }
 
 .bottom-nav button {
@@ -393,9 +386,28 @@ button {
   font-size: 9px;
 }
 
+.bottom-nav .qr-shortcut {
+  position: absolute;
+  left: 50%;
+  top: -28px;
+  width: 58px;
+  height: 58px;
+  transform: translateX(-50%);
+  border: 7px solid #121212;
+  border-radius: 50%;
+  color: white;
+  background: #bd2f2f;
+  box-shadow: 0 10px 24px rgba(189, 47, 47, 0.28);
+}
+
+.bottom-nav .qr-shortcut svg {
+  width: 25px;
+  height: 25px;
+}
+
 .detail-screen {
   overflow: hidden auto;
-  padding-bottom: 82px;
+  padding-bottom: 0;
   scrollbar-width: none;
 }
 
@@ -460,7 +472,7 @@ button {
 .detail-sheet {
   position: relative;
   margin-top: -26px;
-  padding: 25px 22px 24px;
+  padding: 25px 22px 34px;
   border-radius: 25px 25px 0 0;
   background: var(--card);
 }
@@ -557,14 +569,81 @@ button {
 }
 
 .detail-sheet h3 {
-  margin: 22px 0 13px;
+  margin: 22px 0 7px;
   font-size: 17px;
+}
+
+.expect-subtitle {
+  margin: 0 0 18px;
+  color: rgba(28, 33, 29, 0.8);
+  font-size: 13px;
+  line-height: 1.35;
 }
 
 .expect-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 11px;
+}
+
+.detail-map {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+  margin-top: 16px;
+  border-radius: 14px;
+  background: #cfd3da;
+}
+
+.detail-map .map-road {
+  background: rgba(129, 139, 153, 0.42);
+}
+
+.detail-map .pin {
+  width: 42px;
+  height: 42px;
+  border: 8px solid #cfd3da;
+}
+
+.detail-address {
+  display: block;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.detail-location-note {
+  margin: 8px 0 22px;
+  color: #556070;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.detail-pickup-link {
+  width: 100%;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  border: 1px solid rgba(41, 49, 43, 0.12);
+  border-radius: 16px;
+  background: white;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.detail-pickup-link span {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--green);
+  background: #f1f5ef;
+}
+
+.detail-pickup-link svg:last-child {
+  margin-left: auto;
 }
 
 .info-card {
@@ -595,14 +674,6 @@ button {
   line-height: 1.35;
 }
 
-.sticky-action {
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 18px;
-}
-
-.sticky-action button,
 .reserve-button,
 .place-order,
 .success-card button,
@@ -1031,6 +1102,439 @@ button {
 
 .orders-empty {
   padding: 190px 34px 0;
+}
+
+.search-results-screen {
+  padding: 22px 20px 104px;
+  overflow: hidden auto;
+  scrollbar-width: none;
+}
+
+.search-results-screen::-webkit-scrollbar {
+  display: none;
+}
+
+.search-topbar {
+  gap: 12px;
+}
+
+.search-topbar > button,
+.pickup-header > button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.search-input-large {
+  min-width: 0;
+  flex: 1;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 13px;
+  border-radius: 24px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(31, 35, 32, 0.12);
+}
+
+.search-input-large input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 14px;
+}
+
+.search-input-large button {
+  width: 22px;
+  height: 22px;
+  color: #667085;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.search-meta {
+  justify-content: space-between;
+  margin-top: 28px;
+  color: #4f5b6b;
+  font-size: 14px;
+}
+
+.search-meta button {
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 18px;
+  border: 2px solid var(--green);
+  border-radius: 999px;
+  color: var(--green);
+  background: transparent;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.search-tags {
+  display: flex;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.search-tags span {
+  padding: 9px 13px;
+  border-radius: 999px;
+  color: var(--green);
+  background: var(--green-soft);
+  font-size: 14px;
+}
+
+.result-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.result-card {
+  position: relative;
+  width: 100%;
+  min-height: 132px;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  text-align: left;
+  background: white;
+  box-shadow: 0 2px 8px rgba(31, 35, 32, 0.09);
+}
+
+.result-card.sold-out {
+  opacity: 0.48;
+}
+
+.result-image {
+  position: relative;
+  flex: 0 0 auto;
+  width: 96px;
+  height: 96px;
+  overflow: hidden;
+  border-radius: 12px;
+  background-position: center;
+  background-size: cover;
+}
+
+.result-image span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 5px 0;
+  color: white;
+  background: rgba(50, 50, 50, 0.76);
+  text-align: center;
+  font-size: 12px;
+}
+
+.result-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.result-copy p {
+  margin: 0 0 6px;
+  color: var(--green);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.result-card:nth-child(2) .result-copy p {
+  color: #cc8a00;
+}
+
+.result-copy h2 {
+  margin: 0 0 4px;
+  font-size: 19px;
+}
+
+.result-copy small {
+  color: #667085;
+  font-size: 12px;
+}
+
+.result-copy strong {
+  display: block;
+  margin-top: 13px;
+  color: var(--green);
+  font-size: 19px;
+}
+
+.result-copy s {
+  margin-left: 3px;
+  color: #8f96a3;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.result-copy em {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  color: #657083;
+  font-size: 12px;
+  font-style: normal;
+}
+
+.result-rating {
+  position: absolute;
+  right: 15px;
+  top: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 9px;
+  border-radius: 999px;
+  color: #111;
+  background: #fff8d8;
+  font-size: 13px;
+}
+
+.recent-searches {
+  margin-top: 24px;
+}
+
+.recent-searches h2 {
+  margin: 0 0 12px;
+  color: #344054;
+  font-size: 16px;
+}
+
+.recent-searches button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 7px 8px 0;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: white;
+  color: #344054;
+  font-size: 14px;
+}
+
+.orders-screen {
+  overflow: hidden auto;
+  padding: 20px 18px 112px;
+  scrollbar-width: none;
+}
+
+.orders-screen::-webkit-scrollbar {
+  display: none;
+}
+
+.pickup-header {
+  justify-content: space-between;
+}
+
+.pickup-header div {
+  text-align: center;
+}
+
+.pickup-header h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.pickup-header p {
+  margin: 4px 0 0;
+  color: #596579;
+  font-size: 14px;
+}
+
+.pickup-orders-content {
+  margin-top: 18px;
+}
+
+.active-pickup-card,
+.other-order-card {
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(31, 35, 32, 0.08);
+}
+
+.active-pickup-card {
+  padding: 20px;
+}
+
+.pickup-merchant {
+  gap: 12px;
+}
+
+.pickup-merchant img {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.pickup-merchant h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.pickup-merchant p {
+  margin: 6px 0 10px;
+  color: #596579;
+  font-size: 14px;
+}
+
+.pickup-merchant span {
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: var(--green);
+  background: #c9f0d4;
+  font-size: 12px;
+}
+
+.pickup-window {
+  margin-top: 18px;
+  padding: 13px;
+  border-radius: 12px;
+  background: var(--cream);
+}
+
+.pickup-window strong {
+  gap: 8px;
+  font-size: 15px;
+}
+
+.pickup-window div {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 9px;
+  color: #596579;
+  font-size: 12px;
+}
+
+.pickup-address {
+  gap: 8px;
+  margin: 17px 0;
+  color: #596579;
+  font-size: 14px;
+}
+
+.qr-help,
+.pickup-store {
+  color: #596579;
+  text-align: center;
+  font-size: 14px;
+}
+
+.qr-help {
+  margin: 0 0 12px;
+}
+
+.fake-qr {
+  width: 188px;
+  height: 188px;
+  display: grid;
+  grid-template-columns: repeat(13, 1fr);
+  gap: 3px;
+  margin: 0 auto;
+  padding: 19px;
+  border: 2px solid #e0e4ea;
+  border-radius: 16px;
+  background: white;
+}
+
+.fake-qr span {
+  background: transparent;
+}
+
+.fake-qr span.filled,
+.fake-qr span:nth-child(1),
+.fake-qr span:nth-child(2),
+.fake-qr span:nth-child(8),
+.fake-qr span:nth-child(9),
+.fake-qr span:nth-child(6),
+.fake-qr span:nth-child(7),
+.fake-qr span:nth-child(13),
+.fake-qr span:nth-child(14),
+.fake-qr span:nth-child(36),
+.fake-qr span:nth-child(37),
+.fake-qr span:nth-child(43),
+.fake-qr span:nth-child(44) {
+  background: #000;
+}
+
+.active-pickup-card h3 {
+  margin: 22px 0 4px;
+  text-align: center;
+  font-size: 17px;
+}
+
+.pickup-store {
+  margin: 0 0 18px;
+}
+
+.open-instructions {
+  width: 100%;
+  height: 50px;
+  border-radius: 12px;
+  color: white;
+  background: var(--green);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.other-orders-title {
+  margin: 28px 0 14px;
+  font-size: 19px;
+}
+
+.other-order-card {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 12px;
+  padding: 16px;
+}
+
+.other-order-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.other-order-card h3 {
+  margin: 3px 0 10px;
+  font-size: 17px;
+}
+
+.other-order-card p,
+.other-order-card small {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0 0 8px;
+  color: #596579;
+  font-size: 12px;
+}
+
+.other-order-card button {
+  grid-column: 1 / -1;
+  height: 40px;
+  border: 2px solid var(--green);
+  border-radius: 12px;
+  color: var(--green);
+  background: white;
+  font-size: 14px;
+  font-weight: 800;
 }
 
 .orders-empty svg {

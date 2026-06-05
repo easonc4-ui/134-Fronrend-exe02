@@ -1,74 +1,51 @@
 # Surplus Food React Demo
 
-一个基于 React + Vite 的移动端小 demo，界面参考校园临期食品购买流程。页面在电脑浏览器中以手机尺寸展示，可以完成简单的商品浏览、查看详情、查看取货信息、结账和生成订单。
+React + Vite Mobile Demo
+A small mobile demo built with React + Vite. The interface is inspired by a campus near-expiry food purchasing flow. In a desktop browser, the page is displayed at a mobile screen size and supports simple product browsing, product details, pickup information, checkout, and order generation.
 
-## 功能
+Features
+Browse nearby food mystery boxes on the home page
+Search and filter products
+Tap the search box to open the search results page
+Tap a product to open the detail page
+Favorite products
+View pickup address and pickup instructions
+Use the red QR code button in the bottom navigation to go directly to the pickup QR code page
+Open the checkout page
+Switch payment methods
+Enter a promo code and apply a discount
+Complete a purchase and generate a pickup code
+View purchased orders on the orders page
+Running Locally
+Install dependencies first:
 
-- 首页浏览附近食品盲盒
-- 搜索和筛选商品
-- 点击搜索框进入搜索结果页
-- 点击商品进入详情页
-- 收藏商品
-- 查看取货地址和取货说明
-- 底部红色二维码按钮可直接进入取餐二维码页
-- 进入结账页
-- 切换支付方式
-- 输入优惠码并应用折扣
-- 完成购买并生成取货码
-- 在订单页查看已购买订单
-
-## 运行方式
-
-先安装依赖：
-
-```bash
 npm install
-```
+Start the local development server:
 
-启动本地开发服务器：
-
-```bash
 npm run dev
-```
+After startup, open the address shown in the terminal. It is usually:
 
-启动后在浏览器打开终端里显示的地址，通常是：
-
-```text
 http://127.0.0.1:5173/
-```
+If port 5173 is already in use, Vite will automatically switch to another port, such as 5174.
 
-如果 `5173` 端口被占用，Vite 会自动换到其他端口，例如 `5174`。
-
-## 构建
-
-```bash
+Build
 npm run build
-```
+The build output will be generated in the dist/ directory.
 
-构建产物会生成在 `dist/` 目录。
-
-## 预览构建产物
-
-```bash
+Preview The Build
 npm run preview
-```
-
-## Demo 流程
-
-1. 在首页点击一个商品卡片。
-2. 在详情页查看商品信息，点击 `View pickup & reserve`。
-3. 在取货预览页点击 `Pickup Instructions` 查看取货说明。
-4. 点击 `Reserve for ...` 进入结账页。
-5. 选择支付方式。
-6. 可输入优惠码 `SAVE10`，点击 `Apply` 应用折扣。
-7. 点击 `Place order` 完成购买。
-8. 购买成功后进入 Pickup 页面，查看取餐二维码。
-
-也可以点击底部导航中间的红色二维码按钮，直接进入 Pickup / QR Code 页面。
-
-## 技术栈
-
-- React
-- Vite
-- lucide-react
-- CSS
+Demo Flow
+Click a product card on the home page.
+On the detail page, review the product information and click View pickup & reserve.
+On the pickup preview page, click Pickup Instructions to view pickup details.
+Click Reserve for ... to enter the checkout page.
+Select a payment method.
+Optionally enter the promo code SAVE10 and click Apply to apply the discount.
+Click Place order to complete the purchase.
+After a successful purchase, you will be taken to the Pickup page to view the pickup QR code.
+You can also click the red QR code button in the center of the bottom navigation to go directly to the Pickup / QR Code page.
+Tech Stack
+React
+Vite
+lucide-react
+CSS
